@@ -779,6 +779,14 @@
     font-size: 0.85rem;
     color: rgba(255,255,255,0.5);
   }
+  .contact-info-value a {
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .contact-info-value a:hover {
+    color: var(--caramel);
+  }
 
   /* Form */
   .contact-form {
@@ -861,6 +869,13 @@
     letter-spacing: 0.25em;
     text-transform: uppercase;
     color: rgba(255,255,255,0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .footer-logo img {
+    height: 24px;
+    width: auto;
   }
   .footer-logo span { color: var(--caramel); }
   .footer-copy {
@@ -1645,11 +1660,11 @@
         </div>
         <div class="contact-info-item">
           <span class="contact-info-label">Email</span>
-          <span class="contact-info-value">info@le-chocolatier.ch</span>
+          <span class="contact-info-value"><a href="mailto:info@le-chocolatier.ch">info@le-chocolatier.ch</a></span>
         </div>
         <div class="contact-info-item">
           <span class="contact-info-label">Instagram</span>
-          <span class="contact-info-value">@lechocolatiersuisse</span>
+          <span class="contact-info-value"><a href="https://www.instagram.com/lechocolatiersuisse" target="_blank" rel="noopener">@lechocolatiersuisse</a></span>
         </div>
       </div>
     </div>
@@ -1732,7 +1747,7 @@
      FOOTER
 ============================================================ -->
 <footer class="footer">
-  <div class="footer-logo">Le <span>Chocolatier</span></div>
+  <div class="footer-logo"><img src="images/logo-le-chocolatier-suisse-or-1.png" alt="Le Chocolatier logo">Le <span>Chocolatier</span></div>
   <div class="footer-copy">
     © 2026 Le Chocolatier · Aubonne, Suisse
   </div>
