@@ -135,6 +135,13 @@
     text-transform: uppercase;
     color: white;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .nav-logo img {
+    height: 32px;
+    width: auto;
   }
   .nav-logo span { color: var(--caramel); }
   .nav-links {
@@ -964,7 +971,7 @@
 
 <!-- Navigation -->
 <nav class="nav" id="main-nav">
-  <a href="#" class="nav-logo">Le <span>Chocolatier</span></a>
+  <a href="#" class="nav-logo"><img src="images/logo-le-chocolatier-suisse-or-1.png" alt="Le Chocolatier logo">Le <span>Chocolatier</span></a>
   <ul class="nav-links">
     <li><a href="#expertise">
       <span data-lang="fr" class="active">Expertise</span>
@@ -1491,7 +1498,7 @@
   <div class="quote-inner">
     <p class="quote-text">
       <span data-lang="fr" class="active">
-        "Le meilleur chocolat que vous ayez jamais goûté ne portait peut-être pas mon nom.<br>C'est exactement comme ça devrait être."
+        "Le meilleur chocolat que vous ayez jamais goûté ne portait peut-être pas mon nom.<br>C'est exactement comme cela devrait être."
       </span>
       <span data-lang="en">
         "The best chocolate you have ever tasted may not have carried my name.<br>That is exactly how it should be."
