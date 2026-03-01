@@ -562,13 +562,7 @@
   .service-card:hover::before { height: 100%; }
 
   .service-number {
-    font-family: var(--font-display);
-    font-size: 5rem;
-    font-weight: 300;
-    color: rgba(74, 46, 32, 0.08);
-    line-height: 1;
-    margin-bottom: 1.5rem;
-    display: block;
+    display: none;
   }
   .service-title {
     font-family: var(--font-display);
@@ -933,6 +927,11 @@
     .stat-item + .stat-item::before { display: none; }
     .services-section, .quote-section, .expertise-section,
     .contact-section { padding: 5rem 1.5rem; }
+    .service-card { padding: 2rem 1.5rem; }
+    .service-title { font-size: 1.5rem; }
+    .service-tagline { font-size: 0.85rem; }
+    .service-text { font-size: 1rem; }
+    .service-points li { font-size: 0.9rem; }
     .footer { flex-direction: column; gap: 1.5rem; text-align: center; }
     .form-grid { grid-template-columns: 1fr; }
     body { cursor: auto; }
