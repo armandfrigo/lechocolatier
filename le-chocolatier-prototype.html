@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Chocolatier — L'architecte invisible du chocolat d'exception</title>
+<meta name="description" content="Consulting en chocolaterie haut de gamme. Création, production, audit. Derrière les plus grandes maisons suisses.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================
+     DESIGN TOKENS
+  ============================================ */
+  :root {
+    --noir:    #0D0805;
+    --brun:    #1E1208;
+    --marron:  #4A2E20;
+    --caramel: #C8915A;
+    --creme:   #F8F3EB;
+    --or:      #A87832;
+    --vert:    #2D5A1B;
+    --vert-lc: #4A8A2E;
+
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body:    'DM Sans', system-ui, sans-serif;
+
+    --ease-luxury: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* ============================================
+     RESET & BASE
+  ============================================ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    font-weight: 300;
+    background: var(--creme);
+    color: var(--noir);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ============================================
+     CUSTOM CURSOR
+  ============================================ */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--caramel);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s var(--ease-luxury), height 0.3s var(--ease-luxury), background 0.3s;
+    mix-blend-mode: multiply;
+  }
+  .cursor.hover {
+    width: 40px; height: 40px;
+    background: var(--caramel);
+    mix-blend-mode: multiply;
+  }
+
+  /* ============================================
+     LANGUAGE SWITCHER
+  ============================================ */
+  .lang-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.75rem 2rem;
+    background: transparent;
+    mix-blend-mode: normal;
+  }
+  .lang-switcher {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .lang-btn {
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s;
+    padding: 0.25rem 0;
+  }
+  .lang-btn.active, .lang-btn:hover { color: var(--caramel); }
+  .lang-btn + .lang-btn::before {
+    content: '·';
+    margin-right: 1rem;
+    color: rgba(255,255,255,0.2);
+  }
+
+  /* ============================================
+     NAVIGATION
+  ============================================ */
+  .nav {
+    position: fixed;
+    top: 2rem; left: 0; right: 0;
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 3rem;
+    transition: all 0.5s var(--ease-luxury);
+  }
+  .nav.scrolled {
+    top: 0;
+    background: rgba(13, 8, 5, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 1.25rem 3rem;
+    border-bottom: 1px solid rgba(200, 145, 90, 0.15);
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: white;
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--caramel); }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--caramel); }
+  .nav-cta {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--caramel);
+    text-decoration: none;
+    border: 1px solid rgba(200, 145, 90, 0.4);
+    padding: 0.6rem 1.5rem;
+    transition: all 0.3s var(--ease-luxury);
+  }
+  .nav-cta:hover {
+    background: var(--caramel);
+    color: var(--noir);
+    border-color: var(--caramel);
+  }
+
+  /* ============================================
+     HERO
+  ============================================ */
+  .hero {
+    min-height: 100vh;
+    background: var(--brun);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 8rem 3rem 4rem;
+    overflow: hidden;
+  }
+
+  /* Grain texture overlay */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Radial glow */
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -20%; right: -10%;
+    width: 70vw; height: 70vw;
+    background: radial-gradient(ellipse, rgba(200, 145, 90, 0.08) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--caramel);
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s var(--ease-reveal) 0.2s forwards;
+  }
+
+  .hero-h1 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(3.5rem, 8vw, 7.5rem);
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: white;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 1s var(--ease-reveal) 0.4s forwards;
+  }
+  .hero-h1 em {
+    font-style: italic;
+    color: var(--caramel);
+  }
+
+  .hero-sub {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.55);
+    max-width: 540px;
+    margin-bottom: 3.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s var(--ease-reveal) 0.6s forwards;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s var(--ease-reveal) 0.8s forwards;
+  }
+  .btn-primary {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--noir);
+    background: var(--caramel);
+    text-decoration: none;
+    padding: 1rem 2.5rem;
+    transition: all 0.3s var(--ease-luxury);
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--or); }
+  .btn-ghost {
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.3s;
+  }
+  .btn-ghost:hover { color: var(--caramel); }
+  .btn-ghost::after {
+    content: '→';
+    transition: transform 0.3s;
+  }
+  .btn-ghost:hover::after { transform: translateX(4px); }
+
+  /* Hero decorative line */
+  .hero-line {
+    position: absolute;
+    bottom: 3rem; left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 2;
+    opacity: 0;
+    animation: fadeUp 0.8s var(--ease-reveal) 1.2s forwards;
+  }
+  .hero-line span {
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, rgba(200,145,90,0.6), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* ============================================
+     EXPLODED VIEW SECTION
+  ============================================ */
+  .exploded-section {
+    min-height: 100vh;
+    background: var(--noir);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 3rem;
+  }
+  .exploded-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 60% 50%, rgba(74, 138, 46, 0.06) 0%, transparent 60%);
+  }
+
+  .exploded-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    max-width: 1200px;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+  }
+
+  .exploded-text .section-eyebrow {
+    color: var(--vert-lc);
+    margin-bottom: 1.5rem;
+  }
+  .exploded-text h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    font-weight: 300;
+    line-height: 1.1;
+    color: white;
+    margin-bottom: 1.5rem;
+  }
+  .exploded-text h2 em { font-style: italic; color: var(--caramel); }
+  .exploded-text p {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 1rem;
+  }
+  .exploded-text p strong {
+    color: rgba(255,255,255,0.85);
+    font-weight: 400;
+  }
+
+  /* SVG Exploded View */
+  .chocolate-exploded {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .exploded-svg-wrap {
+    width: 420px;
+    height: 480px;
+    position: relative;
+    transform-style: preserve-3d;
+  }
+
+  /* Animated exploded parts using CSS */
+  .choc-part {
+    position: absolute;
+    transition: transform 1.2s var(--ease-reveal), opacity 1s;
+  }
+
+  /* The shell - green hemisphere */
+  .shell-top {
+    top: 20px; left: 50%;
+    transform: translateX(-50%) translateY(0);
+    animation: floatShell 4s ease-in-out infinite;
+  }
+
+  .shell-bottom {
+    top: 230px; left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* Ganache layer */
+  .ganache {
+    top: 175px; left: 50%;
+    transform: translateX(-50%);
+    animation: floatGanache 4s ease-in-out 0.3s infinite;
+  }
+
+  /* Cocoa interior */
+  .interior {
+    top: 155px; left: 50%;
+    transform: translateX(-50%);
+    animation: floatInterior 4s ease-in-out 0.15s infinite;
+  }
+
+  /* Labels */
+  .exploded-label {
+    position: absolute;
+    right: -10px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .exploded-label::before {
+    content: '';
+    width: 40px; height: 1px;
+    background: rgba(200, 145, 90, 0.5);
+    flex-shrink: 0;
+  }
+  .exploded-label-text {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--caramel);
+    white-space: nowrap;
+  }
+
+  .label-1 { top: 55px;  right: -140px; }
+  .label-2 { top: 175px; right: -160px; }
+  .label-3 { top: 265px; right: -160px; }
+  .label-4 { top: 360px; right: -140px; }
+
+  /* ============================================
+     STATS BAND
+  ============================================ */
+  .stats-band {
+    background: var(--creme);
+    border-top: 1px solid rgba(74, 46, 32, 0.12);
+    border-bottom: 1px solid rgba(74, 46, 32, 0.12);
+    padding: 4rem 3rem;
+    overflow: hidden;
+  }
+  .stats-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 2rem;
+  }
+  .stat-item {
+    text-align: center;
+    flex: 1;
+    position: relative;
+  }
+  .stat-item + .stat-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 20%; bottom: 20%;
+    width: 1px;
+    background: rgba(74, 46, 32, 0.15);
+  }
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 400;
+    color: var(--caramel);
+    line-height: 1;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .stat-label {
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--marron);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  .stat-sub {
+    font-size: 0.75rem;
+    color: rgba(74, 46, 32, 0.5);
+    display: block;
+  }
+
+  /* ============================================
+     SERVICES
+  ============================================ */
+  .services-section {
+    padding: 8rem 3rem;
+    background: var(--creme);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .section-header {
+    margin-bottom: 5rem;
+    max-width: 600px;
+  }
+  .section-eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--caramel);
+    display: block;
+    margin-bottom: 1rem;
+  }
+  .section-h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 300;
+    line-height: 1.15;
+    color: var(--noir);
+  }
+  .section-h2 em { font-style: italic; color: var(--marron); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: rgba(74, 46, 32, 0.12);
+    border: 1px solid rgba(74, 46, 32, 0.12);
+  }
+  .service-card {
+    background: var(--creme);
+    padding: 3.5rem;
+    transition: background 0.4s var(--ease-luxury);
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 0;
+    background: var(--caramel);
+    transition: height 0.4s var(--ease-luxury);
+  }
+  .service-card:hover { background: rgba(200, 145, 90, 0.04); }
+  .service-card:hover::before { height: 100%; }
+
+  .service-number {
+    font-family: var(--font-display);
+    font-size: 5rem;
+    font-weight: 300;
+    color: rgba(74, 46, 32, 0.08);
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+  .service-title {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: var(--noir);
+    margin-bottom: 0.5rem;
+  }
+  .service-tagline {
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--caramel);
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+  .service-text {
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: rgba(30, 18, 8, 0.6);
+    margin-bottom: 1.5rem;
+  }
+  .service-points {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .service-points li {
+    font-size: 0.8rem;
+    color: rgba(30, 18, 8, 0.5);
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+  .service-points li::before {
+    content: '—';
+    color: var(--caramel);
+    flex-shrink: 0;
+  }
+
+  /* ============================================
+     QUOTE / PHILOSOPHY
+  ============================================ */
+  .quote-section {
+    background: var(--brun);
+    padding: 8rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .quote-section::before {
+    content: '"';
+    font-family: var(--font-display);
+    font-size: 30rem;
+    line-height: 0.7;
+    color: rgba(200, 145, 90, 0.04);
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -45%);
+    pointer-events: none;
+    user-select: none;
+  }
+  .quote-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .quote-text {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.4;
+    color: white;
+    margin-bottom: 2rem;
+  }
+  .quote-attr {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--caramel);
+  }
+
+  /* ============================================
+     EXPERTISE STRIP
+  ============================================ */
+  .expertise-section {
+    padding: 8rem 3rem;
+    background: var(--creme);
+  }
+  .expertise-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+  .expertise-left .section-h2 { margin-bottom: 2rem; }
+  .expertise-left p {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: rgba(30, 18, 8, 0.6);
+    margin-bottom: 1.5rem;
+  }
+  .expertise-left strong {
+    color: var(--noir);
+    font-weight: 400;
+  }
+
+  .expertise-right {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .expertise-item {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(74, 46, 32, 0.1);
+  }
+  .expertise-item:last-child { border-bottom: none; }
+  .expertise-num {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--caramel);
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  .expertise-item h3 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--noir);
+    margin-bottom: 0.4rem;
+  }
+  .expertise-item p {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: rgba(30, 18, 8, 0.55);
+  }
+
+  /* ============================================
+     CONTACT SECTION
+  ============================================ */
+  .contact-section {
+    background: var(--noir);
+    padding: 8rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-section::after {
+    content: '';
+    position: absolute;
+    bottom: -30%; left: 50%;
+    transform: translateX(-50%);
+    width: 80vw; height: 60vh;
+    background: radial-gradient(ellipse, rgba(200, 145, 90, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .contact-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    position: relative;
+    z-index: 2;
+  }
+  .contact-left .section-eyebrow { color: var(--caramel); }
+  .contact-left h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    font-weight: 300;
+    color: white;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+  .contact-left h2 em { font-style: italic; color: var(--caramel); }
+  .contact-left p {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 2.5rem;
+  }
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .contact-info-item {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .contact-info-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--caramel);
+    width: 80px;
+    flex-shrink: 0;
+  }
+  .contact-info-value {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* Form */
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .form-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+  }
+  .form-input, .form-textarea, .form-select {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: white;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 300;
+    padding: 0.9rem 1.2rem;
+    outline: none;
+    transition: border-color 0.3s;
+    width: 100%;
+    appearance: none;
+  }
+  .form-input::placeholder,
+  .form-textarea::placeholder { color: rgba(255,255,255,0.2); }
+  .form-input:focus,
+  .form-textarea:focus,
+  .form-select:focus {
+    border-color: rgba(200, 145, 90, 0.5);
+  }
+  .form-textarea { resize: none; height: 120px; }
+  .form-select option { background: var(--brun); }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .form-submit {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--noir);
+    background: var(--caramel);
+    border: none;
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .form-submit:hover { background: var(--or); }
+  .form-submit::after { content: '→'; }
+
+  /* ============================================
+     FOOTER
+  ============================================ */
+  .footer {
+    background: var(--noir);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+  .footer-logo span { color: var(--caramel); }
+  .footer-copy {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.05em;
+  }
+  .footer-social a {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .footer-social a:hover { color: var(--caramel); }
+
+  /* ============================================
+     ANIMATIONS
+  ============================================ */
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 0.8; transform: scaleY(1.05); }
+  }
+  @keyframes floatShell {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-18px); }
+  }
+  @keyframes floatGanache {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-10px); }
+  }
+  @keyframes floatInterior {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-14px); }
+  }
+
+  /* Scroll reveal */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s var(--ease-reveal), transform 0.8s var(--ease-reveal);
+  }
+  [data-reveal].visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  [data-reveal-delay="1"] { transition-delay: 0.1s; }
+  [data-reveal-delay="2"] { transition-delay: 0.2s; }
+  [data-reveal-delay="3"] { transition-delay: 0.3s; }
+  [data-reveal-delay="4"] { transition-delay: 0.4s; }
+
+  /* ============================================
+     RESPONSIVE
+  ============================================ */
+  @media (max-width: 1024px) {
+    .exploded-inner { grid-template-columns: 1fr; gap: 4rem; }
+    .exploded-svg-wrap { width: 320px; height: 380px; }
+    .expertise-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .contact-inner { grid-template-columns: 1fr; gap: 4rem; }
+    .services-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hero { padding: 7rem 1.5rem 4rem; }
+    .stats-grid { flex-wrap: wrap; }
+    .stat-item { width: 45%; }
+    .stat-item + .stat-item::before { display: none; }
+    .services-section, .quote-section, .expertise-section,
+    .contact-section { padding: 5rem 1.5rem; }
+    .footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+    .form-grid { grid-template-columns: 1fr; }
+    body { cursor: auto; }
+    .cursor { display: none; }
+    .exploded-label { display: none; }
+  }
+
+  /* ============================================
+     i18n content switching
+  ============================================ */
+  [data-lang] { display: none; }
+  [data-lang].active { display: block; }
+  .inline-lang { display: none; }
+  .inline-lang.active { display: inline; }
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+
+<!-- Language bar -->
+<div class="lang-bar">
+  <div class="lang-switcher">
+    <button class="lang-btn active" onclick="setLang('fr')">FR</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('de')">DE</button>
+  </div>
+</div>
+
+<!-- Navigation -->
+<nav class="nav" id="main-nav">
+  <a href="#" class="nav-logo">Le <span>Chocolatier</span></a>
+  <ul class="nav-links">
+    <li><a href="#expertise">
+      <span data-lang="fr" class="active">Expertise</span>
+      <span data-lang="en">Expertise</span>
+      <span data-lang="de">Expertise</span>
+    </a></li>
+    <li><a href="#services">
+      <span data-lang="fr" class="active">Services</span>
+      <span data-lang="en">Services</span>
+      <span data-lang="de">Leistungen</span>
+    </a></li>
+    <li><a href="#contact">
+      <span data-lang="fr" class="active">Contact</span>
+      <span data-lang="en">Contact</span>
+      <span data-lang="de">Kontakt</span>
+    </a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">
+    <span data-lang="fr" class="active">Votre projet</span>
+    <span data-lang="en">Your project</span>
+    <span data-lang="de">Ihr Projekt</span>
+  </a>
+</nav>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow">
+      <span data-lang="fr" class="active">Aubonne, Suisse · Consulting en chocolaterie haut de gamme</span>
+      <span data-lang="en">Aubonne, Switzerland · Premium Chocolate Consulting</span>
+      <span data-lang="de">Aubonne, Schweiz · Consulting in Premium-Schokolade</span>
+    </p>
+
+    <h1 class="hero-h1">
+      <!-- FR -->
+      <span data-lang="fr" class="active">
+        L'architecte<br>
+        <em>invisible</em><br>
+        du chocolat.
+      </span>
+      <!-- EN -->
+      <span data-lang="en">
+        The invisible<br>
+        <em>architect</em><br>
+        of chocolate.
+      </span>
+      <!-- DE -->
+      <span data-lang="de">
+        Der unsichtbare<br>
+        <em>Architekt</em><br>
+        der Schokolade.
+      </span>
+    </h1>
+
+    <p class="hero-sub">
+      <span data-lang="fr" class="active">
+        Derrière certaines des créations les plus remarquées du chocolat suisse, il y avait une seule expertise. Elle est désormais disponible pour votre projet.
+      </span>
+      <span data-lang="en">
+        Behind some of the most celebrated creations in Swiss chocolate, there was one expertise. It is now available for your project.
+      </span>
+      <span data-lang="de">
+        Hinter einigen der bemerkenswertesten Kreationen der Schweizer Schokolade stand ein einziges Fachwissen. Es steht nun für Ihr Projekt zur Verfügung.
+      </span>
+    </p>
+
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">
+        <span data-lang="fr" class="active">Parlons de votre projet</span>
+        <span data-lang="en">Discuss your project</span>
+        <span data-lang="de">Über Ihr Projekt sprechen</span>
+      </a>
+      <a href="#services" class="btn-ghost">
+        <span data-lang="fr" class="active">Découvrir l'expertise</span>
+        <span data-lang="en">Discover the expertise</span>
+        <span data-lang="de">Expertise entdecken</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-line">
+    <span>
+      <span data-lang="fr" class="active">Défiler</span>
+      <span data-lang="en">Scroll</span>
+      <span data-lang="de">Scrollen</span>
+    </span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STATS
+============================================================ -->
+<div class="stats-band">
+  <div class="stats-grid">
+    <div class="stat-item" data-reveal>
+      <span class="stat-value">20+</span>
+      <span class="stat-label">
+        <span data-lang="fr" class="active">Années</span>
+        <span data-lang="en">Years</span>
+        <span data-lang="de">Jahre</span>
+      </span>
+      <span class="stat-sub">
+        <span data-lang="fr" class="active">de chocolaterie haut de gamme</span>
+        <span data-lang="en">in premium chocolate</span>
+        <span data-lang="de">in Premium-Schokolade</span>
+      </span>
+    </div>
+    <div class="stat-item" data-reveal data-reveal-delay="1">
+      <span class="stat-value">MOF</span>
+      <span class="stat-label">
+        <span data-lang="fr" class="active">Finaliste 2015</span>
+        <span data-lang="en">Finalist 2015</span>
+        <span data-lang="de">Finalist 2015</span>
+      </span>
+      <span class="stat-sub">
+        <span data-lang="fr" class="active">Meilleur Ouvrier de France</span>
+        <span data-lang="en">Best Craftsman of France</span>
+        <span data-lang="de">Bester Handwerker Frankreichs</span>
+      </span>
+    </div>
+    <div class="stat-item" data-reveal data-reveal-delay="2">
+      <span class="stat-value">700t</span>
+      <span class="stat-label">
+        <span data-lang="fr" class="active">Production</span>
+        <span data-lang="en">Production</span>
+        <span data-lang="de">Produktion</span>
+      </span>
+      <span class="stat-sub">
+        <span data-lang="fr" class="active">Produit fini / an · sourcing direct</span>
+        <span data-lang="en">Finished product / yr · direct sourcing</span>
+        <span data-lang="de">Fertigprodukt / Jahr · Direktbeschaffung</span>
+      </span>
+    </div>
+    <div class="stat-item" data-reveal data-reveal-delay="3">
+      <span class="stat-value">B→B</span>
+      <span class="stat-label">Bean-to-Bar</span>
+      <span class="stat-sub">
+        <span data-lang="fr" class="active">De la fève à la tablette</span>
+        <span data-lang="en">From bean to final bar</span>
+        <span data-lang="de">Von der Bohne zur Tafel</span>
+      </span>
+    </div>
+    <div class="stat-item" data-reveal data-reveal-delay="4">
+      <span class="stat-value">DBA</span>
+      <span class="stat-label">
+        <span data-lang="fr" class="active">Doctorat</span>
+        <span data-lang="en">Doctorate</span>
+        <span data-lang="de">Doktorat</span>
+      </span>
+      <span class="stat-sub">
+        <span data-lang="fr" class="active">Business Administration</span>
+        <span data-lang="en">Business Administration</span>
+        <span data-lang="de">Business Administration</span>
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXPLODED VIEW
+============================================================ -->
+<section class="exploded-section" id="exploded">
+  <div class="exploded-inner">
+    <div class="exploded-text" data-reveal>
+      <span class="section-eyebrow">
+        <span data-lang="fr" class="active">Anatomie d'une création</span>
+        <span data-lang="en">Anatomy of a creation</span>
+        <span data-lang="de">Anatomie einer Kreation</span>
+      </span>
+      <h2>
+        <span data-lang="fr" class="active">Chaque détail <em>justifie</em><br>l'ensemble.</span>
+        <span data-lang="en">Every detail <em>justifies</em><br>the whole.</span>
+        <span data-lang="de">Jedes Detail <em>rechtfertigt</em><br>das Ganze.</span>
+      </h2>
+      <p>
+        <span data-lang="fr" class="active">
+          <strong>La coque peinte à la main.</strong> Beurre de cacao coloré au pinceau, couche par couche, avant le moulage. Une technique maîtrisée par très peu.
+        </span>
+        <span data-lang="en">
+          <strong>The hand-painted shell.</strong> Cocoa butter applied brush by brush, layer by layer, before moulding. A technique mastered by very few.
+        </span>
+        <span data-lang="de">
+          <strong>Die handbemalte Hülle.</strong> Kakaobutter, Schicht für Schicht aufgetragen, vor dem Giessen. Eine Technik, die nur wenige beherrschen.
+        </span>
+      </p>
+      <p>
+        <span data-lang="fr" class="active">
+          La ganache, la praline, l'intérieur : trois décisions de formulation distinctes, chacune invisible dans le résultat final, chacune déterminante pour l'expérience.
+        </span>
+        <span data-lang="en">
+          The ganache, the praline, the interior: three distinct formulation decisions, each invisible in the final result, each decisive for the experience.
+        </span>
+        <span data-lang="de">
+          Die Ganache, die Praline, das Innere: drei unterschiedliche Formulierungsentscheidungen, jede im Ergebnis unsichtbar, jede entscheidend für das Erlebnis.
+        </span>
+      </p>
+    </div>
+
+    <div class="chocolate-exploded" data-reveal data-reveal-delay="2">
+      <div class="exploded-svg-wrap">
+
+        <!-- SVG Exploded View — demi-sphère verte avec couches -->
+        <svg width="420" height="480" viewBox="0 0 420 480" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;">
+          <defs>
+            <!-- Green shell gradient - inspired by the photo -->
+            <radialGradient id="shellGrad" cx="35%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#7DB85A"/>
+              <stop offset="30%" stop-color="#4A8A2E"/>
+              <stop offset="70%" stop-color="#2D5A1B"/>
+              <stop offset="100%" stop-color="#1A3A0D"/>
+            </radialGradient>
+            <!-- Marble veins -->
+            <radialGradient id="shellGrad2" cx="60%" cy="55%" r="50%">
+              <stop offset="0%" stop-color="#3D6B25" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+            <!-- Shell highlight -->
+            <radialGradient id="shellHighlight" cx="28%" cy="22%" r="40%">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.5)"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+            <!-- Dark chocolate bottom -->
+            <radialGradient id="darkChocGrad" cx="40%" cy="35%" r="65%">
+              <stop offset="0%" stop-color="#6B3D22"/>
+              <stop offset="60%" stop-color="#3D1E0A"/>
+              <stop offset="100%" stop-color="#1E0D05"/>
+            </radialGradient>
+            <!-- Ganache -->
+            <radialGradient id="ganacheGrad" cx="40%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#5C3020"/>
+              <stop offset="100%" stop-color="#2A1008"/>
+            </radialGradient>
+            <!-- Interior cream -->
+            <radialGradient id="interiorGrad" cx="35%" cy="30%" r="75%">
+              <stop offset="0%" stop-color="#F0DFC0"/>
+              <stop offset="50%" stop-color="#D4A96A"/>
+              <stop offset="100%" stop-color="#8B5E28"/>
+            </radialGradient>
+            <!-- Drop shadow filter -->
+            <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="150%">
+              <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="rgba(0,0,0,0.6)"/>
+            </filter>
+            <filter id="softGlow" x="-10%" y="-10%" width="120%" height="130%">
+              <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="rgba(74,138,46,0.4)"/>
+            </filter>
+          </defs>
+
+          <!-- ===== LAYER 1 (top floating): Green painted shell — upper half ===== -->
+          <g class="choc-part shell-top" style="position:absolute">
+            <!-- Main dome shape -->
+            <ellipse cx="210" cy="120" rx="100" ry="16" fill="#1a3a0d" opacity="0.6"/>
+            <!-- The hemisphere dome -->
+            <path d="M 110 120 Q 110 20 210 20 Q 310 20 310 120 Z" fill="url(#shellGrad)" filter="url(#softGlow)"/>
+            <!-- Marble swirl overlay -->
+            <path d="M 130 100 Q 160 50 210 40 Q 240 35 260 60" stroke="rgba(100,170,60,0.3)" stroke-width="12" fill="none" stroke-linecap="round"/>
+            <path d="M 155 110 Q 190 60 230 55 Q 270 52 285 85" stroke="rgba(30,80,10,0.2)" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <!-- Specular highlight -->
+            <ellipse cx="175" cy="65" rx="35" ry="22" fill="url(#shellHighlight)" opacity="0.6"/>
+            <!-- Rim -->
+            <ellipse cx="210" cy="120" rx="100" ry="16" fill="none" stroke="rgba(74,138,46,0.4)" stroke-width="1.5"/>
+            <!-- Flat base of top shell -->
+            <ellipse cx="210" cy="120" rx="100" ry="16" fill="#1d4010" opacity="0.9"/>
+          </g>
+
+          <!-- Label connector lines (subtle) -->
+          <g opacity="0.4">
+            <line x1="305" y1="68" x2="350" y2="68" stroke="#C8915A" stroke-width="0.8"/>
+            <line x1="350" y1="68" x2="360" y2="68" stroke="#C8915A" stroke-width="0.8"/>
+          </g>
+
+          <!-- ===== LAYER 2: Interior filling — floating ===== -->
+          <!-- Ganache disc -->
+          <g>
+            <ellipse cx="210" cy="220" rx="90" ry="13" fill="url(#ganacheGrad)" opacity="0.95"/>
+            <text x="318" y="224" fill="#C8915A" font-size="9" font-family="DM Sans, sans-serif" letter-spacing="2" opacity="0.8">GANACHE</text>
+            <line x1="300" y1="220" x2="315" y2="220" stroke="#C8915A" stroke-width="0.6" opacity="0.6"/>
+          </g>
+
+          <!-- Interior cream/praline disc -->
+          <g>
+            <ellipse cx="210" cy="255" rx="82" ry="12" fill="url(#interiorGrad)" opacity="0.9"/>
+            <!-- Texture lines on top -->
+            <path d="M 145 255 Q 175 248 210 250 Q 245 252 275 255" stroke="rgba(200,150,80,0.4)" stroke-width="2" fill="none"/>
+            <text x="300" y="258" fill="#C8915A" font-size="9" font-family="DM Sans, sans-serif" letter-spacing="2" opacity="0.8">PRALINÉ</text>
+            <line x1="292" y1="255" x2="298" y2="255" stroke="#C8915A" stroke-width="0.6" opacity="0.6"/>
+          </g>
+
+          <!-- ===== LAYER 3 (bottom): Dark chocolate shell — lower half ===== -->
+          <g>
+            <!-- Bottom bowl shape -->
+            <path d="M 110 320 Q 110 420 210 420 Q 310 420 310 320 Z" fill="url(#darkChocGrad)"/>
+            <!-- Rim top of bowl -->
+            <ellipse cx="210" cy="320" rx="100" ry="16" fill="#4a2010" opacity="0.95"/>
+            <ellipse cx="210" cy="320" rx="100" ry="16" fill="none" stroke="rgba(100,60,20,0.5)" stroke-width="1.5"/>
+            <!-- Inner cavity highlight -->
+            <path d="M 135 330 Q 155 300 210 295 Q 265 300 285 330" fill="none" stroke="rgba(100,70,30,0.3)" stroke-width="4"/>
+            <text x="-10" y="372" fill="#C8915A" font-size="9" font-family="DM Sans, sans-serif" letter-spacing="2" opacity="0.8" text-anchor="end">COQUE CHOCOLAT</text>
+            <line x1="110" y1="370" x2="0" y2="370" stroke="#C8915A" stroke-width="0.6" opacity="0.4"/>
+          </g>
+
+          <!-- Floating particle dots (luxury feel) -->
+          <circle cx="80" cy="150" r="2" fill="#C8915A" opacity="0.3"/>
+          <circle cx="350" cy="200" r="1.5" fill="#4A8A2E" opacity="0.4"/>
+          <circle cx="65" cy="280" r="1" fill="#C8915A" opacity="0.2"/>
+          <circle cx="365" cy="350" r="2" fill="#4A8A2E" opacity="0.3"/>
+          <circle cx="90" cy="390" r="1.5" fill="#C8915A" opacity="0.2"/>
+
+          <!-- Dimension line left side -->
+          <line x1="70" y1="20" x2="70" y2="420" stroke="rgba(200,145,90,0.15)" stroke-width="0.8" stroke-dasharray="4,4"/>
+          <line x1="65" y1="20" x2="75" y2="20" stroke="rgba(200,145,90,0.25)" stroke-width="0.8"/>
+          <line x1="65" y1="420" x2="75" y2="420" stroke="rgba(200,145,90,0.25)" stroke-width="0.8"/>
+
+        </svg>
+
+        <!-- Floating labels positioned absolutely -->
+        <div class="exploded-label label-1">
+          <span class="exploded-label-text">
+            <span data-lang="fr" class="active">Coque peinte · Beurre de cacao</span>
+            <span data-lang="en">Painted shell · Cocoa butter</span>
+            <span data-lang="de">Bemalte Hülle · Kakaobutter</span>
+          </span>
+        </div>
+        <div class="exploded-label label-2">
+          <span class="exploded-label-text">
+            <span data-lang="fr" class="active">Ganache grand cru</span>
+            <span data-lang="en">Grand cru ganache</span>
+            <span data-lang="de">Grand Cru Ganache</span>
+          </span>
+        </div>
+        <div class="exploded-label label-3">
+          <span class="exploded-label-text">
+            <span data-lang="fr" class="active">Praliné maison</span>
+            <span data-lang="en">House praline</span>
+            <span data-lang="de">Hausgemachtes Praliné</span>
+          </span>
+        </div>
+        <div class="exploded-label label-4">
+          <span class="exploded-label-text">
+            <span data-lang="fr" class="active">Coque chocolat noir</span>
+            <span data-lang="en">Dark chocolate shell</span>
+            <span data-lang="de">Zartbitter-Schokoladenhülle</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SERVICES
+============================================================ -->
+<section class="services-section" id="services">
+  <div class="section-header" data-reveal>
+    <span class="section-eyebrow">
+      <span data-lang="fr" class="active">Ce que nous faisons</span>
+      <span data-lang="en">What we do</span>
+      <span data-lang="de">Was wir tun</span>
+    </span>
+    <h2 class="section-h2">
+      <span data-lang="fr" class="active">Une expertise <em>complète</em>,<br>de la fève à la vitrine.</span>
+      <span data-lang="en">A <em>complete</em> expertise,<br>from bean to showcase.</span>
+      <span data-lang="de">Eine <em>vollständige</em> Expertise,<br>von der Bohne bis ins Regal.</span>
+    </h2>
+  </div>
+
+  <div class="services-grid">
+    <!-- Service 1 -->
+    <div class="service-card" data-reveal>
+      <span class="service-number">01</span>
+      <h3 class="service-title">
+        <span data-lang="fr" class="active">Consulting Opérationnel</span>
+        <span data-lang="en">Operational Consulting</span>
+        <span data-lang="de">Operationelles Consulting</span>
+      </h3>
+      <span class="service-tagline">
+        <span data-lang="fr" class="active">Du concept à la mise en production — sans lacune.</span>
+        <span data-lang="en">From concept to production — no gaps.</span>
+        <span data-lang="de">Vom Konzept zur Produktion — lückenlos.</span>
+      </span>
+      <p class="service-text">
+        <span data-lang="fr" class="active">Création de recettes, développement de gammes, pilotage industriel. Avec un sourcing direct au Cameroun et une maîtrise des volumes à grande échelle.</span>
+        <span data-lang="en">Recipe creation, range development, industrial management. With direct sourcing from Cameroon and mastery of large-scale volumes.</span>
+        <span data-lang="de">Rezeptentwicklung, Sortimentsaufbau, Industriesteuerung. Mit Direktbeschaffung aus Kamerun und Beherrschung grosser Mengen.</span>
+      </p>
+      <ul class="service-points">
+        <li>
+          <span data-lang="fr" class="active">Conception et réalisation de projets complets</span>
+          <span data-lang="en">Full project conception and delivery</span>
+          <span data-lang="de">Vollständige Projektkonzeption und -umsetzung</span>
+        </li>
+        <li>
+          <span data-lang="fr" class="active">Développement de gammes sur mesure</span>
+          <span data-lang="en">Custom range development</span>
+          <span data-lang="de">Massgeschneiderte Sortimentsentwicklung</span>
+        </li>
+        <li>
+          <span data-lang="fr" class="active">Grande distribution — jusqu'à 700 tonnes / an</span>
+          <span data-lang="en">Mass market — up to 700 tonnes / year</span>
+          <span data-lang="de">Grossverteiler — bis zu 700 Tonnen / Jahr</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Service 2 -->
+    <div class="service-card" data-reveal data-reveal-delay="1">
+      <span class="service-number">02</span>
+      <h3 class="service-title">
+        <span data-lang="fr" class="active">Créations de Luxe</span>
+        <span data-lang="en">Luxury Creations</span>
+        <span data-lang="de">Luxus-Kreationen</span>
+      </h3>
+      <span class="service-tagline">
+        <span data-lang="fr" class="active">Quand l'excellence n'est pas une option, c'est un point de départ.</span>
+        <span data-lang="en">When excellence is not an option — it's the starting point.</span>
+        <span data-lang="de">Wenn Exzellenz keine Option ist — sondern der Ausgangspunkt.</span>
+      </span>
+      <p class="service-text">
+        <span data-lang="fr" class="active">Commandes exclusives pour maisons de luxe. Collections chocolat × caviar, éditions limitées pour joailliers, horlogers, hôtels cinq étoiles.</span>
+        <span data-lang="en">Exclusive commissions for luxury houses. Chocolate × caviar collections, limited editions for jewellers, watchmakers, five-star hotels.</span>
+        <span data-lang="de">Exklusive Aufträge für Luxushäuser. Schokolade × Kaviar Kollektionen, limitierte Auflagen für Juweliere, Uhrmacher, Fünf-Sterne-Hotels.</span>
+      </p>
+      <ul class="service-points">
+        <li>
+          <span data-lang="fr" class="active">Collections privées · maisons de luxe internationales</span>
+          <span data-lang="en">Private collections · international luxury houses</span>
+          <span data-lang="de">Privatsammlungen · internationale Luxushäuser</span>
+        </li>
+        <li>
+          <span data-lang="fr" class="active">Chocolat × caviar & matières rares</span>
+          <span data-lang="en">Chocolate × caviar & rare materials</span>
+          <span data-lang="de">Schokolade × Kaviar & seltene Materialien</span>
+        </li>
+        <li>
+          <span data-lang="fr" class="active">Ateliers VIP · expériences sensorielles</span>
+          <span data-lang="en">VIP workshops · sensory experiences</span>
+          <span data-lang="de">VIP-Workshops · Sinneserfahrungen</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Service 3 -->
+    <div class="service-card" data-reveal data-reveal-delay="2">
+      <span class="service-number">03</span>
+      <h3 class="service-title">
+        <span data-lang="fr" class="active">Audit Stratégique</span>
+        <span data-lang="en">Strategic Audit</span>
+        <span data-lang="de">Strategisches Audit</span>
+      </h3>
+      <span class="service-tagline">
+        <span data-lang="fr" class="active">Voir ce que vous ne voyez plus — parce que vous êtes dedans.</span>
+        <span data-lang="en">See what you no longer see — because you're inside it.</span>
+        <span data-lang="de">Sehen, was Sie nicht mehr sehen — weil Sie mittendrin sind.</span>
+      </span>
+      <p class="service-text">
+        <span data-lang="fr" class="active">Un regard expert sur votre installation, votre gamme, vos processus. Identifier les pertes invisibles, les opportunités non exploitées.</span>
+        <span data-lang="en">An expert look at your facility, range, and processes. Identify invisible losses and unexplored opportunities.</span>
+        <span data-lang="de">Ein Expertenblick auf Ihre Anlage, Ihr Sortiment und Ihre Prozesse. Unsichtbare Verluste und ungenutzte Chancen identifizieren.</span>
+      </p>
+      <ul class="service-points">
+        <li>
+          <span data-lang="fr" class="active">Analyse des installations & flux de production</span>
+          <span data-lang="en">Facility & production flow analysis</span>
+          <span data-lang="de">Anlagen- und Produktionsflussanalyse</span>
+        </li>
+        <li>
+          <span data-lang="fr" class="active">Évaluation des ressources humaines</span>
+          <span data-lang="en">Human resources evaluation</span>
+          <span data-lang="de">Personalressourcen-Bewertung</span>
+        </li>
+        <li>
+          <span data-lang="fr" class="active">Rapport & recommandations priorisées</span>
+          <span data-lang="en">Report & prioritised recommendations</span>
+          <span data-lang="de">Bericht & priorisierte Empfehlungen</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Service 4 -->
+    <div class="service-card" data-reveal data-reveal-delay="3">
+      <span class="service-number">04</span>
+      <h3 class="service-title">
+        <span data-lang="fr" class="active">Formations</span>
+        <span data-lang="en">Training</span>
+        <span data-lang="de">Ausbildung</span>
+      </h3>
+      <span class="service-tagline">
+        <span data-lang="fr" class="active">Transmettre ce que vingt ans n'enseignent pas dans les écoles.</span>
+        <span data-lang="en">Pass on what twenty years don't teach in schools.</span>
+        <span data-lang="de">Weitergeben, was zwanzig Jahre in Schulen nicht lehren.</span>
+      </span>
+      <p class="service-text">
+        <span data-lang="fr" class="active">Formations techniques et technologiques pour professionnels exigeants. Bean-to-bar, confiserie haute gamme, accompagnement personnalisé.</span>
+        <span data-lang="en">Technical and technological training for demanding professionals. Bean-to-bar, premium confectionery, personalised coaching.</span>
+        <span data-lang="de">Technische Ausbildung für anspruchsvolle Profis. Bean-to-Bar, Premium-Konditorei, persönliches Coaching.</span>
+      </p>
+      <ul class="service-points">
+        <li>Bean-to-Bar — <span data-lang="fr" class="active">maîtrise complète du process</span><span data-lang="en">full process mastery</span><span data-lang="de">vollständige Prozessbeherrschung</span></li>
+        <li>
+          <span data-lang="fr" class="active">Chocolat & confiserie haut de gamme</span>
+          <span data-lang="en">Premium chocolate & confectionery</span>
+          <span data-lang="de">Premium-Schokolade & Konfiserie</span>
+        </li>
+        <li>
+          <span data-lang="fr" class="active">Accompagnement en entreprise · sur mesure</span>
+          <span data-lang="en">In-company coaching · bespoke</span>
+          <span data-lang="de">Unternehmensbegleitung · massgeschneidert</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PHILOSOPHY QUOTE
+============================================================ -->
+<section class="quote-section" data-reveal>
+  <div class="quote-inner">
+    <p class="quote-text">
+      <span data-lang="fr" class="active">
+        "Le meilleur chocolat que vous ayez jamais goûté ne portait peut-être pas mon nom.<br>C'est exactement comme ça devrait être."
+      </span>
+      <span data-lang="en">
+        "The best chocolate you have ever tasted may not have carried my name.<br>That is exactly how it should be."
+      </span>
+      <span data-lang="de">
+        "Die beste Schokolade, die Sie je gekostet haben, trug vielleicht nicht meinen Namen.<br>Genau so soll es sein."
+      </span>
+    </p>
+    <span class="quote-attr">Le Chocolatier · Aubonne, Suisse</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     EXPERTISE
+============================================================ -->
+<section class="expertise-section" id="expertise">
+  <div class="expertise-inner">
+    <div class="expertise-left" data-reveal>
+      <span class="section-eyebrow">
+        <span data-lang="fr" class="active">L'expertise</span>
+        <span data-lang="en">The expertise</span>
+        <span data-lang="de">Die Expertise</span>
+      </span>
+      <h2 class="section-h2">
+        <span data-lang="fr" class="active">Vingt ans dans l'ombre<br>des <em>grands noms.</em></span>
+        <span data-lang="en">Twenty years behind<br>the <em>great names.</em></span>
+        <span data-lang="de">Zwanzig Jahre hinter<br>den <em>grossen Namen.</em></span>
+      </h2>
+      <p>
+        <span data-lang="fr" class="active">
+          Il y a des experts qui parlent de chocolat. Et il y en a un qui en a fait — pendant deux décennies — pour les maisons qui définissent le standard suisse.
+        </span>
+        <span data-lang="en">
+          There are experts who talk about chocolate. And there is one who made it — for two decades — for the houses that define the Swiss standard.
+        </span>
+        <span data-lang="de">
+          Es gibt Experten, die über Schokolade reden. Und es gibt einen, der sie gemacht hat — zwei Jahrzehnte lang — für die Häuser, die den Schweizer Standard definieren.
+        </span>
+      </p>
+      <p>
+        <span data-lang="fr" class="active">
+          <strong>Chocolaterie Stettler, Genève.</strong> L'Hôtel du Cap-Eden-Roc, Antibes. Jaeger-LeCoultre. Des maisons de haute chocolaterie dont les noms restent confidentiels par respect pour leur exclusivité. La capacité à opérer à grande échelle — jusqu'à 700 tonnes de produit fini par an, avec un sourcing direct depuis les plantations au Cameroun.
+        </span>
+        <span data-lang="en">
+          <strong>Chocolaterie Stettler, Geneva.</strong> Hôtel du Cap-Eden-Roc, Antibes. Jaeger-LeCoultre. Premium chocolate houses whose names remain confidential out of respect for their exclusivity. The capacity to operate at scale — up to 700 tonnes of finished product per year, with direct sourcing from plantations in Cameroon.
+        </span>
+        <span data-lang="de">
+          <strong>Chocolaterie Stettler, Genf.</strong> Hôtel du Cap-Eden-Roc, Antibes. Jaeger-LeCoultre. Premium-Schokoladenhäuser, deren Namen aus Respekt vor ihrer Exklusivität vertraulich bleiben. Die Fähigkeit, in grossem Massstab zu operieren — bis zu 700 Tonnen Fertigprodukt pro Jahr, mit Direktbeschaffung aus Plantagen in Kamerun.
+        </span>
+      </p>
+    </div>
+
+    <div class="expertise-right" data-reveal data-reveal-delay="2">
+      <div class="expertise-item">
+        <span class="expertise-num">01</span>
+        <div>
+          <h3>
+            <span data-lang="fr" class="active">Finaliste MOF 2015</span>
+            <span data-lang="en">MOF 2015 Finalist</span>
+            <span data-lang="de">MOF 2015 Finalist</span>
+          </h3>
+          <p>
+            <span data-lang="fr" class="active">Finaliste Meilleur Ouvrier de France — Chocolatier-Confiseur. La mesure ultime du métier.</span>
+            <span data-lang="en">Finalist, Best Craftsman of France — Chocolatier-Confiseur. The ultimate measure of the craft.</span>
+            <span data-lang="de">Finalist, Bester Handwerker Frankreichs — Chocolatier-Confiseur. Das ultimative Mass des Handwerks.</span>
+          </p>
+        </div>
+      </div>
+      <div class="expertise-item">
+        <span class="expertise-num">02</span>
+        <div>
+          <h3>Bean-to-Bar</h3>
+          <p>
+            <span data-lang="fr" class="active">Maîtrise complète du processus — de la sélection des fèves à la tablette finale. Rare en Suisse à ce niveau d'expertise.</span>
+            <span data-lang="en">Complete process mastery — from bean selection to the final bar. Rare in Switzerland at this level of expertise.</span>
+            <span data-lang="de">Vollständige Prozessbeherrschung — von der Bohnenauswahl bis zur fertigen Tafel. In der Schweiz auf diesem Expertenniveau selten.</span>
+          </p>
+        </div>
+      </div>
+      <div class="expertise-item">
+        <span class="expertise-num">03</span>
+        <div>
+          <h3>
+            <span data-lang="fr" class="active">Sourcing direct · Cameroun</span>
+            <span data-lang="en">Direct sourcing · Cameroon</span>
+            <span data-lang="de">Direktbeschaffung · Kamerun</span>
+          </h3>
+          <p>
+            <span data-lang="fr" class="active">Relations directes avec les plantations. Traçabilité totale. Volumes jusqu'à 700 tonnes de produit fini par an pour la grande distribution.</span>
+            <span data-lang="en">Direct relationships with plantations. Full traceability. Volumes up to 700 tonnes of finished product per year for mass retail.</span>
+            <span data-lang="de">Direktbeziehungen zu Plantagen. Vollständige Rückverfolgbarkeit. Volumen bis zu 700 Tonnen Fertigprodukt pro Jahr für den Grosshandel.</span>
+          </p>
+        </div>
+      </div>
+      <div class="expertise-item">
+        <span class="expertise-num">04</span>
+        <div>
+          <h3>
+            <span data-lang="fr" class="active">Fondation Haute Chocolaterie · DBA</span>
+            <span data-lang="en">Fondation Haute Chocolaterie · DBA</span>
+            <span data-lang="de">Fondation Haute Chocolaterie · DBA</span>
+          </h3>
+          <p>
+            <span data-lang="fr" class="active">Co-fondateur de la Fondation Haute Chocolaterie. Doctorat en Business Administration — l'union rare du geste artisanal et de la pensée stratégique.</span>
+            <span data-lang="en">Co-founder of the Fondation Haute Chocolaterie. DBA — the rare union of artisan craft and strategic thinking.</span>
+            <span data-lang="de">Mitgründer der Fondation Haute Chocolaterie. DBA — die seltene Verbindung von handwerklichem Können und strategischem Denken.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CONTACT
+============================================================ -->
+<section class="contact-section" id="contact">
+  <div class="contact-inner">
+    <div class="contact-left" data-reveal>
+      <span class="section-eyebrow">
+        <span data-lang="fr" class="active">Votre projet</span>
+        <span data-lang="en">Your project</span>
+        <span data-lang="de">Ihr Projekt</span>
+      </span>
+      <h2>
+        <span data-lang="fr" class="active">Parlons de ce<br>que vous <em>voulez bâtir.</em></span>
+        <span data-lang="en">Let's talk about<br>what you <em>want to build.</em></span>
+        <span data-lang="de">Sprechen wir darüber,<br>was Sie <em>aufbauen wollen.</em></span>
+      </h2>
+      <p>
+        <span data-lang="fr" class="active">Chaque projet est unique. Prenez contact pour un premier échange confidentiel — Édouard vous répondra personnellement.</span>
+        <span data-lang="en">Every project is unique. Get in touch for a first confidential exchange — you will receive a personal reply.</span>
+        <span data-lang="de">Jedes Projekt ist einzigartig. Nehmen Sie Kontakt für ein erstes vertrauliches Gespräch auf — Sie erhalten eine persönliche Antwort.</span>
+      </p>
+      <div class="contact-info">
+        <div class="contact-info-item">
+          <span class="contact-info-label">
+            <span data-lang="fr" class="active">Adresse</span>
+            <span data-lang="en">Address</span>
+            <span data-lang="de">Adresse</span>
+          </span>
+          <span class="contact-info-value">Aubonne, Vaud — Suisse</span>
+        </div>
+        <div class="contact-info-item">
+          <span class="contact-info-label">Email</span>
+          <span class="contact-info-value">info@le-chocolatier.ch</span>
+        </div>
+        <div class="contact-info-item">
+          <span class="contact-info-label">Instagram</span>
+          <span class="contact-info-value">@lechocolatiersuisse</span>
+        </div>
+      </div>
+    </div>
+
+    <div data-reveal data-reveal-delay="2">
+      <form class="contact-form" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/merci">
+        <input type="hidden" name="form-name" value="contact">
+        <p style="display:none"><input name="bot-field"></p>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="name">
+              <span data-lang="fr" class="active">Nom complet *</span>
+              <span data-lang="en">Full name *</span>
+              <span data-lang="de">Vollständiger Name *</span>
+            </label>
+            <input class="form-input" type="text" id="name" name="name" required
+              placeholder="Jean Dupont">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="company">
+              <span data-lang="fr" class="active">Entreprise</span>
+              <span data-lang="en">Company</span>
+              <span data-lang="de">Unternehmen</span>
+            </label>
+            <input class="form-input" type="text" id="company" name="company"
+              placeholder="Maison XYZ">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email *</label>
+          <input class="form-input" type="email" id="email" name="email" required
+            placeholder="vous@exemple.com">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="type">
+            <span data-lang="fr" class="active">Type de projet *</span>
+            <span data-lang="en">Project type *</span>
+            <span data-lang="de">Projekttyp *</span>
+          </label>
+          <select class="form-select" id="type" name="type" required>
+            <option value="" disabled selected>—</option>
+            <option value="consulting">
+              Consulting opérationnel / Operational consulting / Operationelles Consulting
+            </option>
+            <option value="luxury">
+              Création luxe / Luxury creation / Luxus-Kreation
+            </option>
+            <option value="audit">
+              Audit stratégique / Strategic audit / Strategisches Audit
+            </option>
+            <option value="formation">
+              Formation / Training / Ausbildung
+            </option>
+            <option value="other">
+              Autre / Other / Andere
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="message">Message *</label>
+          <textarea class="form-textarea" id="message" name="message" required
+            placeholder="Décrivez brièvement votre projet…"></textarea>
+        </div>
+
+        <button type="submit" class="form-submit">
+          <span data-lang="fr" class="active">Envoyer</span>
+          <span data-lang="en">Send</span>
+          <span data-lang="de">Senden</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer class="footer">
+  <div class="footer-logo">Le <span>Chocolatier</span></div>
+  <div class="footer-copy">
+    © 2026 Le Chocolatier · Aubonne, Suisse
+  </div>
+  <div class="footer-social">
+    <a href="https://www.instagram.com/lechocolatiersuisse" target="_blank" rel="noopener">
+      Instagram @lechocolatiersuisse
+    </a>
+  </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT (minimal)
+============================================================ -->
+<script>
+  // ─── Custom cursor ───────────────────────────────────────
+  const cursor = document.getElementById('cursor');
+  if (window.matchMedia('(pointer: fine)').matches) {
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top  = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button, .service-card').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+  }
+
+  // ─── Nav scroll effect ───────────────────────────────────
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 80);
+  }, { passive: true });
+
+  // ─── Scroll reveal ───────────────────────────────────────
+  const reveals = document.querySelectorAll('[data-reveal]');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const delay = entry.target.dataset.revealDelay || 0;
+        setTimeout(() => entry.target.classList.add('visible'), delay * 100);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  // ─── i18n language switcher ──────────────────────────────
+  function setLang(lang) {
+    // Update buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === lang);
+    });
+    // Update [data-lang] blocks
+    document.querySelectorAll('[data-lang]').forEach(el => {
+      el.classList.toggle('active', el.dataset.lang === lang);
+    });
+    // Update html lang attr
+    document.documentElement.lang = lang;
+    // Persist
+    localStorage.setItem('lc-lang', lang);
+  }
+
+  // Restore language preference
+  const savedLang = localStorage.getItem('lc-lang');
+  if (savedLang && savedLang !== 'fr') setLang(savedLang);
+
+  // ─── Nav active link ─────────────────────────────────────
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 200) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === `#${current}`
+        ? 'var(--caramel)' : '';
+    });
+  }, { passive: true });
+</script>
+
+</body>
+</html>
